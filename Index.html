@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Prediction App</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0f172a;
+  color:#fff;
+}
+
+.header{
+  padding:22px;
+  background:#111827;
+  text-align:center;
+}
+
+.header h1{
+  margin:0;
+  font-size:25px;
+}
+
+.header p{
+  color:#94a3b8;
+  margin:7px 0 0;
+}
+
+.container{
+  max-width:500px;
+  margin:auto;
+  padding:16px;
+}
+
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:16px;
+  margin-bottom:16px;
+}
+
+input,button{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:0;
+  margin-top:10px;
+  font-size:16px;
+}
+
+input{
+  background:#334155;
+  color:white;
+}
+
+button{
+  background:#6366f1;
+  color:white;
+  font-weight:bold;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.stat{
+  background:#334155;
+  padding:18px;
+  border-radius:12px;
+  text-align:center;
+}
+
+.number{
+  font-size:27px;
+  font-weight:bold;
+  margin-top:6px;
+}
+
+.result{
+  font-size:42px;
+  text-align:center;
+  font-weight:bold;
+  padding:15px;
+}
+
+.hidden{
+  display:none;
+}
+
+.note{
+  color:#94a3b8;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>My Prediction App</h1>
+  <p>Demo Prediction Dashboard</p>
+</div>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div id="loginBox" class="card">
+    <h2>Login / Register</h2>
+
+    <input
+      id="username"
+      type="text"
+      placeholder="Enter your name"
+    >
+
+    <button onclick="login()">Continue</button>
+
+    <p class="note">
+      Demo version. Information is stored locally on this device.
+    </p>
+  </div>
+
+
+  <!-- APP -->
+  <div id="appBox" class="hidden">
+
+    <div class="card">
+      <h2 id="welcome"></h2>
+
+      <p>Latest Demo Result</p>
+
+      <div id="result" class="result">--</div>
+
+      <button onclick="generateResult()">
+        Generate Demo Result
+      </button>
+    </div>
+
+
+    <div class="grid">
+
+      <div class="stat">
+        <div>Total</div>
+        <div id="total" class="number">0</div>
+      </div>
+
+      <div class="stat">
+        <div>Last</div>
+        <div id="last" class="number">--</div>
+      </div>
+
+    </div>
+
+
+    <div class="card">
+      <h3>Profile</h3>
+
+      <p id="profile"></p>
+
+      <button onclick="logout()">
+        Logout
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let username =
+  localStorage.getItem("username") || "";
+
+let total =
+  Number(localStorage.getItem("total") || 0);
+
+let last =
+  localStorage.getItem("last") || "--";
+
+
+function updateScreen(){
+
+  const loginBox =
+    document.getElementById("loginBox");
+
+  const appBox =
+    document.getElementById("appBox");
+
+  if(username){
+
+    loginBox.classList.add("hidden");
+    appBox.classList.remove("hidden");
+
+    document.getElementById("welcome")
+      .innerText =
+      "Hello, " + username + " 👋";
+
+    document.getElementById("profile")
+      .innerText =
+      "User: " + username;
+
+    document.getElementById("total")
+      .innerText = total;
+
+    document.getElementById("last")
+      .innerText = last;
+
+    document.getElementById("result")
+      .innerText = last;
+
+  }else{
+
+    loginBox.classList.remove("hidden");
+    appBox.classList.add("hidden");
+
+  }
+}
+
+
+function login(){
+
+  const input =
+    document.getElementById("username");
+
+  const name =
+    input.value.trim();
+
+  if(!name){
+
+    alert("Please enter your name.");
+
+    return;
+  }
+
+  username = name;
+
+  localStorage.setItem(
+    "username",
+    username
+  );
+
+  updateScreen();
+}
+
+
+function generateResult(){
+
+  const randomNumber =
+    Math.floor(Math.random() * 100);
+
+  total++;
+
+  last = randomNumber;
+
+  localStorage.setItem(
+    "total",
+    total
+  );
+
+  localStorage.setItem(
+    "last",
+    last
+  );
+
+  updateScreen();
+}
+
+
+function logout(){
+
+  localStorage.removeItem("username");
+
+  username = "";
+
+  updateScreen();
+}
+
+
+updateScreen();
+
+</script>
+
+</body>
+</html>
